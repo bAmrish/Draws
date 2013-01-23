@@ -33,12 +33,17 @@ Deck.prototype.shuffle = function(){
 }
 
 /**
+	Removes and returns the top card from the deck.
+*/
+Deck.prototype.pop = function() {
+	return this.cards.length && this.cards.splice(0, 1)[0];
+};
+
+/**
 	Deal a card. Deal function deals first card from the deck of cards.
 */
 Deck.prototype.deal = function() {
-	if(this.cards.length){
-		return this.cards.splice(0, 1)
-	}
+	return this.pop();
 };
 
 /**
@@ -52,7 +57,7 @@ Deck.prototype.empty = function() {
 /**
 	Adds a single card to the deck.
 */
-Deck.prototype.addCard = function(card) {
+Deck.prototype.addCard = Deck.prototype.push = function(card) {
 	this.cards.push(card);
 };
 
@@ -66,3 +71,4 @@ Deck.prototype.addCards = function(cards) {
 		this.addCard(cards[i]);
 	}
 };
+

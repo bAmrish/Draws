@@ -16,3 +16,7 @@ Player.prototype.addCard = function(card){
 Player.prototype.addCards = function(cards){
 	this.deck.addCard(cards);
 }
+
+Player.prototype.deal = function() {
+	return this.deck.deal();
+};

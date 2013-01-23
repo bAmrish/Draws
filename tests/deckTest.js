@@ -24,18 +24,6 @@ describe('Deck', function(){
 		expect(newDeck.cards.length).toBe(52);
 	});
 
-	it('should have a deal function and it should work', function(){
-		
-		var dealtCard
-
-		expect(newDeck.deal).toBeDefined();
-		expect(newDeck.cards.length).toBe(52);
-		var dealtCards = newDeck.deal();
-		expect(dealtCards.length).toBe(1);
-		expect(dealtCards[0] instanceof Card).toBe(true);
-		expect(newDeck.cards.length).toBe(51);
-
-	});
 
 	it('should have an empty function that would remove all the cards from the deck.', function(){
 		expect(newDeck.empty).toBeDefined();
@@ -54,4 +42,46 @@ describe('Deck', function(){
 		expect(newDeck.cards.length).toBe(1);		
 		expect(newDeck.cards[0]).toEqual(card);
 	});
+
+	it('should have a pop method which removes and returns the top card from the deck.', function(){
+		var topCard = newDeck.cards[0];
+		var returnCard;
+
+		expect(newDeck.pop).toBeDefined();
+		expect(newDeck.cards.length).toBe(52);
+		returnCard = newDeck.pop();
+		expect(returnCard).toEqual(topCard);
+		expect(newDeck.cards.length).toBe(51);
+
+	});
+
+	it('should have a pop method which removes and returns the top card from the deck.', function(){
+		
+		var topCard = newDeck.cards[0];
+		var dealtCard;
+
+		expect(newDeck.pop).toBeDefined();
+		expect(newDeck.cards.length).toBe(52);
+		dealtCard = newDeck.pop();
+		expect(dealtCard).toEqual(topCard);
+		expect(newDeck.cards.length).toBe(51);
+
+	});
+
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
