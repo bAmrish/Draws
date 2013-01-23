@@ -1,4 +1,7 @@
-Deck = function(){
+var Card = require('./card');
+var Util = require('./util');
+
+module.exports = Deck = function(){
 	this.init();
 }
 
@@ -70,5 +73,9 @@ Deck.prototype.addCards = function(cards) {
 	for(i = 0; i < totalCards; i++){
 		this.addCard(cards[i]);
 	}
+};
+
+Deck.prototype.inspect = Deck.prototype.toString = function() {
+	return this.cards.join(',');
 };
 

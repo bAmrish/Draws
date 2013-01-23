@@ -1,4 +1,7 @@
-Game = function(players){
+var Deck = require('./deck');
+var Player = require('./player');
+
+module.exports = Game = function(players){
 
 	//Set the players for the game.
 	this.players = players || [];
@@ -8,16 +11,24 @@ Game = function(players){
 
 	this.playDeck = new Deck();
 
+	this.playDeck.shuffle();
+	this.playDeck.shuffle();
+	this.playDeck.shuffle();
+	this.playDeck.shuffle();
+
+	console.log(this.playDeck);
+
 	//create a playing area deck. 
 	// this is the deck of cards that are currently in play.
 	this.playAreaDeck = new Deck();
 
 	//empty the playAreaDeck;
 	this.playAreaDeck.empty();
-
 }
 
 Game.prototype.start = function() {
+
+	console.info('Starting game....');
 
 	var currentPlayer, turnCounter = 0;
 
@@ -29,13 +40,27 @@ Game.prototype.start = function() {
 
 	this._distributeCards();
 
+	for(var z = 0; z < this._playersInGame.length; z++){
+		console.log(this._playersInGame[z] + 'has ' + this._playersInGame[z].deck);
+	}
+
+
 	while(!this.isWon()){
+
 		
 		currentPlayer = this._playersInGame[turnCounter % this._playersInGame.length];
+		
+		console.info('Turn: ' + turnCounter + ', Player: ' + currentPlayer);
+
+
 
 		if(this.isPlayerInGame(currentPlayer)){
-			this.playAreaDeck.push(currentPlayer.deal());
+			var poppedCard = currentPlayer.deal();
+			console.log(currentPlayer + 'played ' + poppedCard);
+			this.playAreaDeck.push(poppedCard);
 			if(this.hasWonTurn()){
+				console.info('\t' + currentPlayer + ' has won this turn with deck: ' + this.playAreaDeck);
+
 				currentPlayer.addCards(this.playAreaDeck.cards);
 				currentPlayer.deck.shuffle();
 				this.playAreaDeck.empty();
@@ -45,9 +70,9 @@ Game.prototype.start = function() {
 			}
 
 		}
-
 	}
 
+	console.info(this._playersInGame[0] + ' has won!!')
 	//return the winning player
 	return this._playersInGame[0];
 };
@@ -60,6 +85,28 @@ Game.prototype.start = function() {
 
 */
 Game.prototype.hasWonTurn = function() {
+	var cards = this.playAreaDeck.cards;
+	if(cards.length > 1){
+		var c1 = cards[cards.length - 1];
+		var c2 = cards[cards.length - 2];
+		console.log('comparing ' + c1.value + ' and ' + c2.value);
+		console.log('comparing ' + c1 + ' and ' + c2);
+
+		if(c1.value === c2.value){
+			console.log('MATCH FOUND!!! ');
+			return true;
+		}else{
+			console.log('MATCH NOT FOUND!!')
+			return false;
+		}
+	}else{
+		return false;
+	}
+
+
+	return c.length > 1 && (c[c.length - 1].value === c[c.length - 2].value)
+
+
 	var cardsInPlay = this.playAreaDeck.cards;
 	var totalCardsInPlay = cardsInPlay.length;
 	var lastCard, lastButOneCard
@@ -67,7 +114,7 @@ Game.prototype.hasWonTurn = function() {
 		lastCard = cardsInPlay[totalCardsInPlay - 1];
 		lastButOneCard = cardsInPlay[totalCardsInPlay - 2];
 
-		if(lastCard.suite === lastButOneCard.suite || lastCard.value === lastButOneCard.value){
+		if(lastCard.value === lastButOneCard.value){
 			return true;
 		}
 	}
@@ -80,6 +127,8 @@ Game.prototype.hasWonTurn = function() {
 	This function distributes cards evently among all the players.
 */
 Game.prototype._distributeCards = function() {
+
+	console.log('starting to distribute cards...')
 	var totalPlayers = this.players.length,
 		cards = this.playDeck.cards,
 		totalCard = cards.length;
@@ -87,8 +136,10 @@ Game.prototype._distributeCards = function() {
 	this.playDeck.shuffle();
 
 	for(i = 0; i < totalCard; i++){
-		this.players[i % totalPlayers].addCard(cards.splice(0, 1));
+		this.players[i % totalPlayers].deck.push(this.playDeck.pop());
 	}
+
+	console.log('distributed all my cards.');
 
 };
 
@@ -121,8 +172,7 @@ Game.prototype.isPlayerInGame = function(player){
 	for(i = 0; i < totalPlayersInGame; i++){
 		if(this._playersInGame[i] === player){
 			this._playersInGame.splice(i, 1)
+			return false;
 		}
 	}
-
-	return false;
 }

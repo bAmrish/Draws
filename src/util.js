@@ -1,4 +1,4 @@
-Util = {
+module.exports = Util = {
 	/**
 		This function returns a random whole number
 		between the min and max (both inclusive).
